@@ -4,20 +4,18 @@ using UnityEngine;
 
 namespace MyLittleMario.Movements
 {
-    public class CanFlip : MonoBehaviour
+    public class FlipChecker : MonoBehaviour
     {
-
-        public void FlipCharacter(float horizontal)
+        public void FlipCharacter(float horizontalInput)
         {
-            if (horizontal != 0)
+            if (horizontalInput != 0)
             {
-                float mathfValue = Mathf.Sign(horizontal);
+                float mathfValue = Mathf.Sign(horizontalInput);
                 if (transform.localScale.x == mathfValue) return;
                 transform.localScale = new Vector2(mathfValue, 1);
             }
 
         }
-
     }
 
 }

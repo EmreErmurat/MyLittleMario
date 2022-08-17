@@ -1,20 +1,20 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MyLittleMario.Movements
 {
-    public class OnGround : MonoBehaviour
+    public class OnGroundChecker : MonoBehaviour
     {
         [SerializeField] bool _isOnGround = false;
-        [SerializeField] Transform[] translates;
         [SerializeField] float maxDistance = 0.15f;
+
+        [SerializeField] Transform[] translates;
         [SerializeField] LayerMask _layerMask;
 
         public bool IsOnGround => _isOnGround;
 
-        private void Update()
+        private void FixedUpdate()
         {
             foreach (Transform footTransform in translates)
             {
@@ -22,7 +22,7 @@ namespace MyLittleMario.Movements
                 CheckFootOnGround(footTransform);
 
                 if (_isOnGround) break;
-                                
+
             }
 
 
@@ -44,5 +44,5 @@ namespace MyLittleMario.Movements
             }
         }
     }
-
 }
+

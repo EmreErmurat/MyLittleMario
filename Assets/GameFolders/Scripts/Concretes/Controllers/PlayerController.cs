@@ -9,63 +9,80 @@ namespace MyLittleMario.Controllers
 {
     public class PlayerController : MonoBehaviour
     {
-        PcInputs _pcInputs;
-        Mover _mover;
-        Jump _jump;
-        PlayerAnimation _playerAnimation;
-        CanFlip _canFlip;
-        OnGround _onGround;
-       
+        PcInputsReceiver pcInputsReceiver;
+        MoveOperationController moveOperationController;
+        JumpOperationController JumpOperationController;
+        PlayerAnimationController PlayerAnimationController;
+        FlipChecker FlipChecker;
+        OnGroundChecker OnGroundChecker;
+        
 
-        float _horizontal;
-        
-        
-        bool _isJump;
+        float _horizontalInputHandler;
+        bool _jumpInputHandler;
+        bool _canJump;
 
         
         private void Awake()
         {
-            _pcInputs = new PcInputs();
-            _mover = GetComponent<Mover>();
-            _jump = GetComponent<Jump>();
-            _playerAnimation = GetComponent<PlayerAnimation>();
-            _canFlip = GetComponent<CanFlip>();
-            _onGround = GetComponent<OnGround>();
+            pcInputsReceiver = new PcInputsReceiver();
+            moveOperationController = GetComponent<MoveOperationController>();
+            JumpOperationController = GetComponent<JumpOperationController>();
+            PlayerAnimationController = GetComponent<PlayerAnimationController>();
+            FlipChecker = GetComponent<FlipChecker>();
+            OnGroundChecker = GetComponent<OnGroundChecker>();
 
         }
 
         private void Update()
         {
-            _horizontal = _pcInputs.Horizontal;
+            //InputHandler
+            _horizontalInputHandler = pcInputsReceiver.HorizontalInput;
+            _jumpInputHandler = pcInputsReceiver.JumpInput;
 
-            if (_pcInputs.Jump && _onGround.IsOnGround)
-            {
-                _isJump = true;
-                _playerAnimation.JumpAnimatoin(_jump.isJumpAction);
-            }
+
+            PlayerMove();
+            PlayerJump();
+
         }
 
         private void FixedUpdate()
         {
 
-            _playerAnimation.MoveAnimation(_horizontal);
+            //FlipControl
+            FlipChecker.FlipCharacter(_horizontalInputHandler);
 
-            _mover.HorizontalAction(_horizontal);
 
-
-            _canFlip.FlipCharacter(_horizontal);
-
-            if (_isJump)
+            //JumpAction
+            if (_canJump)
             {
-                _jump.JumpAction();
-                _isJump = false;
+                JumpOperationController.JumpAction();
+                _canJump = false;
                 
             }
 
-            _playerAnimation.JumpAnimatoin(_jump.isJumpAction);
+            PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction);
 
         }
 
+        void PlayerMove()
+        {
+            if (_horizontalInputHandler != 0)
+            {
+                moveOperationController.HorizontalMoveAction(_horizontalInputHandler);
+
+                PlayerAnimationController.MoveAnimation(_horizontalInputHandler);
+                
+            }
+        }
+
+        void PlayerJump()
+        {
+            if (_jumpInputHandler && OnGroundChecker.IsOnGround)
+            {
+                _canJump = true;
+                PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction);
+            }
+        }
 
     }
 }
