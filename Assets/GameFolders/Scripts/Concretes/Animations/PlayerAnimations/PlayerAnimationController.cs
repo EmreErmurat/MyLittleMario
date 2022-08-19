@@ -34,7 +34,15 @@ namespace MyLittleMario.Animations
 
 
 
-
+        public void ClimbingAnimation(bool isClimbing, float verticalInput)
+        {
+            float _mathfValueVertical = Mathf.Abs(verticalInput);
+            
+           // if (_animator.GetBool("isClimb") == isClimbing) return;
+            
+            _animator.SetFloat("climbSpeed", _mathfValueVertical);
+            _animator.SetBool("isClimb", isClimbing);
+        }
 
 
     }

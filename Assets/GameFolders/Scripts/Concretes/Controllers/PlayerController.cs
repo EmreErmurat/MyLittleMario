@@ -15,12 +15,14 @@ namespace MyLittleMario.Controllers
         PlayerAnimationController PlayerAnimationController;
         FlipChecker FlipChecker;
         OnGroundChecker OnGroundChecker;
+        ClimbingOperationController ClimbingOperationController;
         
 
         float _horizontalInputHandler;
+        float _verticalInputHandler;
         bool _jumpInputHandler;
         bool _canJump;
-
+        
         
         private void Awake()
         {
@@ -30,19 +32,23 @@ namespace MyLittleMario.Controllers
             PlayerAnimationController = GetComponent<PlayerAnimationController>();
             FlipChecker = GetComponent<FlipChecker>();
             OnGroundChecker = GetComponent<OnGroundChecker>();
-
+            ClimbingOperationController = GetComponent<ClimbingOperationController>();
         }
 
         private void Update()
         {
             //InputHandler
             _horizontalInputHandler = pcInputsReceiver.HorizontalInput;
+            _verticalInputHandler = pcInputsReceiver.VerticalInput;
             _jumpInputHandler = pcInputsReceiver.JumpInput;
+            
 
 
             PlayerMove();
             PlayerJump();
-
+            
+            PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction);
+            PlayerAnimationController.ClimbingAnimation(ClimbingOperationController.IsClimbing, _verticalInputHandler);
         }
 
         private void FixedUpdate()
@@ -53,14 +59,14 @@ namespace MyLittleMario.Controllers
 
 
             //JumpAction
-            if (_canJump)
+            if (_canJump && !ClimbingOperationController.IsClimbing)
             {
                 JumpOperationController.JumpAction();
                 _canJump = false;
                 
             }
 
-            PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction);
+            ClimbingOperationController.ClimbAction(_verticalInputHandler);
 
         }
 
@@ -77,12 +83,14 @@ namespace MyLittleMario.Controllers
 
         void PlayerJump()
         {
-            if (_jumpInputHandler && OnGroundChecker.IsOnGround)
+            if (_jumpInputHandler && OnGroundChecker.IsOnGround && !ClimbingOperationController.IsClimbing)
             {
                 _canJump = true;
-                PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction);
+                PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction && JumpOperationController.isJumpAction);
             }
         }
+
+
 
     }
 }

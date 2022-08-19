@@ -7,6 +7,7 @@ namespace MyLittleMario.Inputs
     public class PcInputsReceiver 
     {
         public float HorizontalInput => Input.GetAxis("Horizontal");
+        public float VerticalInput => Input.GetAxis("Vertical");
         public bool JumpInput => Input.GetButtonDown("Jump");
     }
 }
