@@ -3,6 +3,7 @@ using MyLittleMario.Inputs;
 using MyLittleMario.Movements;
 using System.Collections;
 using System.Collections.Generic;
+using MyLittleMario.Combats;
 using UnityEngine;
 
 namespace MyLittleMario.Controllers
@@ -16,6 +17,7 @@ namespace MyLittleMario.Controllers
         FlipChecker FlipChecker;
         OnGroundChecker OnGroundChecker;
         ClimbingOperationController ClimbingOperationController;
+        PlayerHealth playerHealth;
         
 
         float _horizontalInputHandler;
@@ -33,6 +35,7 @@ namespace MyLittleMario.Controllers
             FlipChecker = GetComponent<FlipChecker>();
             OnGroundChecker = GetComponent<OnGroundChecker>();
             ClimbingOperationController = GetComponent<ClimbingOperationController>();
+            playerHealth = GetComponent<PlayerHealth>();
         }
 
         private void Update()
@@ -86,10 +89,20 @@ namespace MyLittleMario.Controllers
             if (_jumpInputHandler && OnGroundChecker.IsOnGround && !ClimbingOperationController.IsClimbing)
             {
                 _canJump = true;
-                PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction && JumpOperationController.isJumpAction);
+                PlayerAnimationController.JumpAnimation(JumpOperationController.isJumpAction);
             }
         }
 
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            Damage damage = collision.collider.GetComponent<Damage>();
+
+            if (damage != null)
+            {
+                playerHealth.TakeHit(damage);
+                return;
+            }
+        }
 
 
     }
