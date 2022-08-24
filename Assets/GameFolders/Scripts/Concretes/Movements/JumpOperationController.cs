@@ -12,7 +12,7 @@ namespace MyLittleMario.Movements
 
         [SerializeField] float _jumpforce = 350f;
 
-        public bool isJumpAction => _rigidbody2D.velocity != Vector2.zero;
+        //public bool isJumpAction => _rigidbody2D.velocity != Vector2.zero;
 
         private void Awake()
         {

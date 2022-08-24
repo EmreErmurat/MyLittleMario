@@ -26,10 +26,10 @@ namespace MyLittleMario.Animations
         }
 
 
-        public void JumpAnimation(bool JumpInput)
+        public void JumpAnimation(bool OnGround)
         {
-            if (JumpInput == _animator.GetBool("isJump")) return;
-            _animator.SetBool("isJump", JumpInput);
+            if (!OnGround == _animator.GetBool("isJump")) return;
+            _animator.SetBool("isJump", !OnGround);
         }
 
 

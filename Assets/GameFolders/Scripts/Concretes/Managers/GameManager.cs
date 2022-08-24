@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using MyLittleMario.Inputs;
 
 public class GameManager : MonoBehaviour
 {
+    public int ActiveSceneIndex => SceneManager.GetActiveScene().buildIndex;
+    
+
 
     public static GameManager Instance { get; private set; }
 
@@ -13,7 +18,10 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         SingletonGameObject();
+        
     }
+
+
 
     private void SingletonGameObject()
     {
@@ -37,6 +45,24 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadSceneAsync(int levelIndex)
     {
         yield return new WaitForSeconds(_delayLevelTime);
-        yield return SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + levelIndex);
+
+        yield return SceneManager.UnloadSceneAsync(ActiveSceneIndex);
+
+        SceneManager.LoadSceneAsync(levelIndex, LoadSceneMode.Additive).completed += (AsyncOperation obj) =>
+        {
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(levelIndex));
+        };
+
+       
     }
+
+   
+
+    public void ExitGame()
+    {
+        print("Quit Game");
+        Application.Quit();
+    }
+
+    
 }
