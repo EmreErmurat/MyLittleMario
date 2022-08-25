@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyLittleMario.Combats
 {
-    public class PlayerHealth : MonoBehaviour
+    public class HealthConrtoller : MonoBehaviour
     {
       
 

@@ -19,7 +19,21 @@ namespace MyLittleMario.Uis
             healthText.text = currentHealth.ToString();
         }
 
+        public void ScoreValuePrint(int score)
+        {
+            scoreText.text = score.ToString();
+        }
 
+        private void OnEnable()
+        {
+            GameManager.Instance.scorePrinter += ScoreValuePrint;
+            GameManager.Instance.IncreaseScore(0);
+        }
+        private void OnDisable()
+        {
+            GameManager.Instance.scorePrinter -= ScoreValuePrint;
+
+        }
 
     }
 

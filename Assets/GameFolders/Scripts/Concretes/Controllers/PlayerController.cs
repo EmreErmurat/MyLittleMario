@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using MyLittleMario.Combats;
 using UnityEngine;
 using MyLittleMario.Uis;
+using MyLittleMario.ExtensionMethods;
 
 namespace MyLittleMario.Controllers
 {
@@ -13,14 +14,15 @@ namespace MyLittleMario.Controllers
     {
         PcInputsReceiver pcInputsReceiver;
         MoveOperationController moveOperationController;
-        JumpOperationController JumpOperationController;
-        PlayerAnimationController PlayerAnimationController;
-        FlipChecker FlipChecker;
-        OnGroundChecker OnGroundChecker;
-        ClimbingOperationController ClimbingOperationController;
-        PlayerHealth playerHealth;
-        GameMenuCanvasController GameMenuCanvasController;
+        JumpOperationController jumpOperationController;
+        CharacterAnimationController characterAnimationController;
+        FlipChecker flipChecker;
+        OnGroundChecker onGroundChecker;
+        ClimbingOperationController climbingOperationController;
+        HealthConrtoller healthConrtoller;
+        GameMenuCanvasController gameMenuCanvasController;
         DisplayHealthAndScore displayHealthAndScore;
+        Damage damage;
         
 
         float _horizontalInputHandler;
@@ -33,34 +35,37 @@ namespace MyLittleMario.Controllers
         {
             pcInputsReceiver = new PcInputsReceiver();
             moveOperationController = GetComponent<MoveOperationController>();
-            JumpOperationController = GetComponent<JumpOperationController>();
-            PlayerAnimationController = GetComponent<PlayerAnimationController>();
-            FlipChecker = GetComponent<FlipChecker>();
-            OnGroundChecker = GetComponent<OnGroundChecker>();
-            ClimbingOperationController = GetComponent<ClimbingOperationController>();
-            playerHealth = GetComponent<PlayerHealth>();
-            GameMenuCanvasController = FindObjectOfType<GameMenuCanvasController>();
-            if (GameMenuCanvasController != null)
+            jumpOperationController = GetComponent<JumpOperationController>();
+            characterAnimationController = GetComponent<CharacterAnimationController>();
+            flipChecker = GetComponent<FlipChecker>();
+            onGroundChecker = GetComponent<OnGroundChecker>();
+            climbingOperationController = GetComponent<ClimbingOperationController>();
+            healthConrtoller = GetComponent<HealthConrtoller>();
+            gameMenuCanvasController = FindObjectOfType<GameMenuCanvasController>();
+            damage = GetComponent<Damage>();
+
+            if (gameMenuCanvasController != null)
             {
-                displayHealthAndScore = GameMenuCanvasController.GetComponentInChildren<DisplayHealthAndScore>();
+                displayHealthAndScore = gameMenuCanvasController.GetComponentInChildren<DisplayHealthAndScore>();
             }
         }
         private void OnEnable()
         {
-            if (GameMenuCanvasController != null)
+            if (gameMenuCanvasController != null)
             {
-                playerHealth.onDead += GameMenuCanvasController.GameOverPanelOpen;
-                playerHealth.healthDisplayPrinter += displayHealthAndScore.HealthValuePrint;
+                healthConrtoller.onDead += gameMenuCanvasController.GameOverPanelOpen;
+                healthConrtoller.healthDisplayPrinter += displayHealthAndScore.HealthValuePrint;
+               
             }
             
         }
 
         private void OnDisable()
         {
-            if (GameMenuCanvasController != null)
+            if (gameMenuCanvasController != null)
             {
-                playerHealth.onDead -= GameMenuCanvasController.GameOverPanelOpen;
-                playerHealth.healthDisplayPrinter -= displayHealthAndScore.HealthValuePrint;
+                healthConrtoller.onDead -= gameMenuCanvasController.GameOverPanelOpen;
+                healthConrtoller.healthDisplayPrinter -= displayHealthAndScore.HealthValuePrint;
             }
 
         }
@@ -71,34 +76,34 @@ namespace MyLittleMario.Controllers
             _verticalInputHandler = pcInputsReceiver.VerticalInput;
             _jumpInputHandler = pcInputsReceiver.JumpInput;
 
-            if (playerHealth.IsDead) return;
+            if (healthConrtoller.IsDead) return;
             
 
             
 
             PlayerMove();
             PlayerJump();
-            
-            PlayerAnimationController.JumpAnimation(OnGroundChecker.IsOnGround);
-            PlayerAnimationController.ClimbingAnimation(ClimbingOperationController.IsClimbing, _verticalInputHandler);
+
+            characterAnimationController.JumpAnimation(onGroundChecker.IsOnGround);
+            characterAnimationController.ClimbingAnimation(climbingOperationController.IsClimbing, _verticalInputHandler);
         }
 
         private void FixedUpdate()
         {
 
             //FlipControl
-            FlipChecker.FlipCharacter(_horizontalInputHandler);
+            flipChecker.FlipCharacter(_horizontalInputHandler);
 
 
             //JumpAction
-            if (_canJump && !ClimbingOperationController.IsClimbing)
+            if (_canJump && !climbingOperationController.IsClimbing)
             {
-                JumpOperationController.JumpAction();
+                jumpOperationController.JumpAction();
                 _canJump = false;
                 
             }
 
-            ClimbingOperationController.ClimbAction(_verticalInputHandler);
+            climbingOperationController.ClimbAction(_verticalInputHandler);
 
         }
 
@@ -108,28 +113,28 @@ namespace MyLittleMario.Controllers
             {
                 moveOperationController.HorizontalMoveAction(_horizontalInputHandler);
 
-                PlayerAnimationController.MoveAnimation(_horizontalInputHandler);
+                characterAnimationController.MoveAnimation(_horizontalInputHandler);
                 
             }
         }
 
         void PlayerJump()
         {
-            if (_jumpInputHandler && OnGroundChecker.IsOnGround && !ClimbingOperationController.IsClimbing)
+            if (_jumpInputHandler && onGroundChecker.IsOnGround && !climbingOperationController.IsClimbing)
             {
                 _canJump = true;
-                PlayerAnimationController.JumpAnimation(OnGroundChecker.IsOnGround);
+                characterAnimationController.JumpAnimation(onGroundChecker.IsOnGround);
             }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            Damage damage = collision.collider.GetComponent<Damage>();
+            HealthConrtoller _playerHealth = collision.ObjectHasHealth();
 
-            if (damage != null)
+            if (_playerHealth != null && collision.WasHitTopSide())
             {
-                playerHealth.TakeHit(damage);
-                return;
+                _playerHealth.TakeHit(damage);
+                jumpOperationController.JumpAction();
             }
         }
 

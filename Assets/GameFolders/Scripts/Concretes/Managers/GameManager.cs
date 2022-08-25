@@ -8,7 +8,10 @@ using MyLittleMario.Inputs;
 public class GameManager : MonoBehaviour
 {
     public int ActiveSceneIndex => SceneManager.GetActiveScene().buildIndex;
-    
+
+    public event System.Action<int> scorePrinter;
+
+    [SerializeField] int score;
 
 
     public static GameManager Instance { get; private set; }
@@ -64,5 +67,12 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+
+    public void IncreaseScore(int scoreValue)
+    {
+        score += scoreValue;
+        scorePrinter?.Invoke(score);
+        
+    }
     
 }

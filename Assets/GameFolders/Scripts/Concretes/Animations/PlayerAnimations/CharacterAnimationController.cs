@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MyLittleMario.Animations
 {
     [RequireComponent(typeof(Animator))]
-    public class PlayerAnimationController : MonoBehaviour
+    public class CharacterAnimationController : MonoBehaviour
     {
         Animator _animator;
 
@@ -44,6 +44,11 @@ namespace MyLittleMario.Animations
             _animator.SetBool("isClimb", isClimbing);
         }
 
+
+        public void DyingAnimation()
+        {
+            _animator.SetTrigger("dying");
+        }
 
     }
 

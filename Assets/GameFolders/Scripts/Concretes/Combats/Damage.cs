@@ -10,9 +10,9 @@ namespace MyLittleMario.Combats
 
         public int HitDamage => damage;
 
-        public void HitTarget(PlayerHealth playerHealth)
+        public void HitTarget(HealthConrtoller healthConrtoller)
         {
-            playerHealth.TakeHit(this);
+            healthConrtoller.TakeHit(this);
         }
     }
 }
