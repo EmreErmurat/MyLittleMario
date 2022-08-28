@@ -10,9 +10,10 @@ namespace MyLittleMario.Movements
 
         Rigidbody2D _rigidbody2D;
 
-        [SerializeField] float _jumpforce = 350f;
+        float jumpforce = 400f;
+        float horizontalForce = 100f;
 
-        //public bool isJumpAction => _rigidbody2D.velocity != Vector2.zero;
+       
 
         private void Awake()
         {
@@ -23,9 +24,19 @@ namespace MyLittleMario.Movements
         public void JumpAction()
         {
             _rigidbody2D.velocity = Vector2.zero;
-            _rigidbody2D.AddForce(Vector2.up * _jumpforce);
+            _rigidbody2D.AddForce(Vector2.up * jumpforce);
         }
 
+
+        public void WallJumpAction(float direction)
+        {
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Vector2.right * direction * horizontalForce);
+            _rigidbody2D.AddForce(Vector2.up * jumpforce);
+            
+            
+
+        }
 
     }
 

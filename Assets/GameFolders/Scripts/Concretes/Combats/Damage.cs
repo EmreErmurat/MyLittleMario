@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyLittleMario.Abstracts.Combats;
 
 namespace MyLittleMario.Combats
 {
@@ -10,9 +11,9 @@ namespace MyLittleMario.Combats
 
         public int HitDamage => damage;
 
-        public void HitTarget(HealthConrtoller healthConrtoller)
+        public void HitTarget(Health health)
         {
-            healthConrtoller.TakeHit(this);
+            health.TakeHit(this);
         }
     }
 }

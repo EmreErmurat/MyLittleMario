@@ -5,6 +5,8 @@ using MyLittleMario.Movements;
 using MyLittleMario.Animations;
 using MyLittleMario.Combats;
 using MyLittleMario.ExtensionMethods;
+using MyLittleMario.Sound;
+using MyLittleMario.Abstracts.Combats;
 
 namespace MyLittleMario.Controllers
 {
@@ -12,7 +14,7 @@ namespace MyLittleMario.Controllers
     {
         MoveOperationController moveOperationController;
         CharacterAnimationController characterAnimationController;
-        HealthConrtoller healthConrtoller;
+        EnemyHealthContoller enemyHealthContoller;
         FlipChecker flipChecker;
         EdgeDetector edgeDetector;
         Damage damage;
@@ -24,21 +26,23 @@ namespace MyLittleMario.Controllers
         {
             moveOperationController = GetComponent<MoveOperationController>();
             characterAnimationController = GetComponent<CharacterAnimationController>();
-            healthConrtoller = GetComponent<HealthConrtoller>();
+            enemyHealthContoller = GetComponent<EnemyHealthContoller>();
             flipChecker = GetComponent<FlipChecker>();
             edgeDetector = GetComponent<EdgeDetector>();
             damage = GetComponent<Damage>();
 
             _direction = 1f;
+
+                       
         }
 
         private void OnEnable()
         {
-            healthConrtoller.onDead += DeadAction;
+            enemyHealthContoller.enemyOnDead += DeadAction;
         }
         private void FixedUpdate()
         {
-            if (healthConrtoller.IsDead) return;
+            if (enemyHealthContoller.IsDead) return;
 
             moveOperationController.HorizontalMoveAction(_direction);
 
@@ -47,7 +51,7 @@ namespace MyLittleMario.Controllers
 
         private void LateUpdate()
         {
-            if (healthConrtoller.IsDead) return;
+            if (enemyHealthContoller.IsDead) return;
 
             if (edgeDetector.EdgeDetect())
             {
@@ -61,11 +65,11 @@ namespace MyLittleMario.Controllers
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            HealthConrtoller _playerHealth = collision.ObjectHasHealth();
+            Health _health = collision.ObjectHasHealth();
 
-            if (_playerHealth != null && collision.WasHitLeftOrRightSide())
+            if (_health != null && collision.WasHitLeftOrRightSide())
             {
-                _playerHealth.TakeHit(damage);
+                _health.TakeHit(damage);
             }
         }
 
@@ -78,6 +82,7 @@ namespace MyLittleMario.Controllers
         private IEnumerator DeadActionAsync()
         {
             characterAnimationController.DyingAnimation();
+            SoundManager.Instance.PlayOneShot(SoundType.enemyDead);
             yield return new WaitForSeconds(.6f);
             Destroy(this.gameObject);
         }

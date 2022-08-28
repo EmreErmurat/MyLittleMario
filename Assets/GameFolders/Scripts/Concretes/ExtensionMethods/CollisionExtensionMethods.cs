@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyLittleMario.Controllers;
 using MyLittleMario.Combats;
+using MyLittleMario.Abstracts.Combats;
 
 namespace MyLittleMario.ExtensionMethods
 {
@@ -32,18 +33,21 @@ namespace MyLittleMario.ExtensionMethods
             return collision.collider.GetComponent<EnemyController>() != null;
         }
 
-        public static HealthConrtoller ObjectHasHealth(this Collision2D collision)
-        {
-            HealthConrtoller _healthConrtoller = collision.collider.GetComponent<HealthConrtoller>();
 
-            if (_healthConrtoller != null)
+
+
+        public static Health ObjectHasHealth(this Collision2D collision)
+        {
+            Health _health = collision.collider.GetComponent<Health>();
+
+
+            if (_health != null)
             {
-                return _healthConrtoller;
+                return _health;
             }
 
             return null;
         }
-
 
 
 

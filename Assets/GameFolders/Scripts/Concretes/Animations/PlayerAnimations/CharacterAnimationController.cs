@@ -50,6 +50,16 @@ namespace MyLittleMario.Animations
             _animator.SetTrigger("dying");
         }
 
+        public void HurtAnimation()
+        {
+            _animator.SetTrigger("hurting");
+        }
+
+        public void SlideWallAnimation(bool onWall, bool onGround)
+        {
+            if (_animator.GetBool("slide") == (onWall && !onGround)) return;
+            _animator.SetBool("slide", (onWall && !onGround));
+        }
     }
 
 }

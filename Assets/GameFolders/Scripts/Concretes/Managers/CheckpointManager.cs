@@ -10,30 +10,30 @@ namespace MyLittleMario.Managers
     public class CheckpointManager : MonoBehaviour
     {
         CheckpointController[] checkpointControllersList;
-        HealthConrtoller healthConrtoller;
+        PlayerHealthController playerHealthController;
 
         public event System.Action ClearCheckpointHandler;
 
         private void Awake()
         {
             checkpointControllersList = GetComponentsInChildren<CheckpointController>();
-            healthConrtoller = FindObjectOfType<PlayerController>().GetComponent<HealthConrtoller>();
+            playerHealthController = FindObjectOfType<PlayerController>().GetComponent<PlayerHealthController>();
         }
 
         private void OnEnable()
         {
-            healthConrtoller.onHealthChanged += HandlerHealthChanged;
+            playerHealthController.onHealthChanged += HandlerHealthChanged;
 
         }
 
         private void OnDisable()
         {
-            healthConrtoller.onHealthChanged -= HandlerHealthChanged;
+            playerHealthController.onHealthChanged -= HandlerHealthChanged;
         }
 
         void HandlerHealthChanged()
         {
-            healthConrtoller.transform.position = checkpointControllersList.LastOrDefault(x => x.IsPassed).transform.position;
+            playerHealthController.transform.position = checkpointControllersList.LastOrDefault(x => x.IsPassed).transform.position;
         }
 
         public void ClearCheckpointAction()

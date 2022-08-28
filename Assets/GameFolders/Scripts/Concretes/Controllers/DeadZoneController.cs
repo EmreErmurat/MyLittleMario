@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyLittleMario.Combats;
 using MyLittleMario.ExtensionMethods;
+using MyLittleMario.Abstracts.Combats;
 
 namespace MyLittleMario.Controllers
 {
@@ -18,11 +19,11 @@ namespace MyLittleMario.Controllers
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            HealthConrtoller healthConrtoller = collision.ObjectHasHealth();
+            Health _health = collision.ObjectHasHealth();
 
-            if (healthConrtoller != null)
+            if (_health != null)
             {
-                healthConrtoller.TakeHit(damage);
+                _health.TakeHit(damage);
             }
         }
 

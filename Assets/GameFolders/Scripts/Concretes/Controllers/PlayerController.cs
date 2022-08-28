@@ -7,6 +7,7 @@ using MyLittleMario.Combats;
 using UnityEngine;
 using MyLittleMario.Uis;
 using MyLittleMario.ExtensionMethods;
+using MyLittleMario.Abstracts.Combats;
 
 namespace MyLittleMario.Controllers
 {
@@ -19,18 +20,24 @@ namespace MyLittleMario.Controllers
         FlipChecker flipChecker;
         OnGroundChecker onGroundChecker;
         ClimbingOperationController climbingOperationController;
-        HealthConrtoller healthConrtoller;
+        PlayerHealthController playerHealthController;
         GameMenuCanvasController gameMenuCanvasController;
         DisplayHealthAndScore displayHealthAndScore;
         Damage damage;
-        
+        OnWallDetector onWallDetector;
+
+        Rigidbody2D _rigidbody2D;
+        Transform _transform;
 
         float _horizontalInputHandler;
         float _verticalInputHandler;
         bool _jumpInputHandler;
         bool _canJump;
-        
-        
+        bool _canWallJump;
+
+
+       
+
         private void Awake()
         {
             pcInputsReceiver = new PcInputsReceiver();
@@ -40,9 +47,12 @@ namespace MyLittleMario.Controllers
             flipChecker = GetComponent<FlipChecker>();
             onGroundChecker = GetComponent<OnGroundChecker>();
             climbingOperationController = GetComponent<ClimbingOperationController>();
-            healthConrtoller = GetComponent<HealthConrtoller>();
+            playerHealthController = GetComponent<PlayerHealthController>();
             gameMenuCanvasController = FindObjectOfType<GameMenuCanvasController>();
             damage = GetComponent<Damage>();
+            onWallDetector = GetComponent<OnWallDetector>();
+            _rigidbody2D = GetComponent<Rigidbody2D>();
+            _transform = GetComponent<Transform>();
 
             if (gameMenuCanvasController != null)
             {
@@ -53,8 +63,8 @@ namespace MyLittleMario.Controllers
         {
             if (gameMenuCanvasController != null)
             {
-                healthConrtoller.onDead += gameMenuCanvasController.GameOverPanelOpen;
-                healthConrtoller.healthDisplayPrinter += displayHealthAndScore.HealthValuePrint;
+                playerHealthController.onDead += gameMenuCanvasController.GameOverPanelOpen;
+                playerHealthController.healthDisplayPrinter += displayHealthAndScore.HealthValuePrint;
                
             }
             
@@ -64,8 +74,8 @@ namespace MyLittleMario.Controllers
         {
             if (gameMenuCanvasController != null)
             {
-                healthConrtoller.onDead -= gameMenuCanvasController.GameOverPanelOpen;
-                healthConrtoller.healthDisplayPrinter -= displayHealthAndScore.HealthValuePrint;
+                playerHealthController.onDead -= gameMenuCanvasController.GameOverPanelOpen;
+                playerHealthController.healthDisplayPrinter -= displayHealthAndScore.HealthValuePrint;
             }
 
         }
@@ -76,13 +86,14 @@ namespace MyLittleMario.Controllers
             _verticalInputHandler = pcInputsReceiver.VerticalInput;
             _jumpInputHandler = pcInputsReceiver.JumpInput;
 
-            if (healthConrtoller.IsDead) return;
-            
+            if (playerHealthController.IsDead || !playerHealthController.CanMove) return;
 
-            
 
-            PlayerMove();
+
             PlayerJump();
+            WallJump();
+            SlideWall();
+
 
             characterAnimationController.JumpAnimation(onGroundChecker.IsOnGround);
             characterAnimationController.ClimbingAnimation(climbingOperationController.IsClimbing, _verticalInputHandler);
@@ -90,31 +101,45 @@ namespace MyLittleMario.Controllers
 
         private void FixedUpdate()
         {
+            PlayerMove();
+            
+            climbingOperationController.ClimbAction(_verticalInputHandler);
 
             //FlipControl
             flipChecker.FlipCharacter(_horizontalInputHandler);
 
 
             //JumpAction
-            if (_canJump && !climbingOperationController.IsClimbing)
+            if (_canJump)
             {
                 jumpOperationController.JumpAction();
                 _canJump = false;
                 
             }
 
-            climbingOperationController.ClimbAction(_verticalInputHandler);
+            if (_canWallJump)
+            {
+               
+              
+                _transform.localScale = new Vector2(_transform.localScale.x * -1, _transform.localScale.y);
+                jumpOperationController.WallJumpAction(_transform.localScale.x);
+
+                _canWallJump = false;
+            }
+            
+
 
         }
 
         void PlayerMove()
         {
-            if (_horizontalInputHandler != 0)
+            if (_horizontalInputHandler != 0 && playerHealthController.CanMove)
             {
                 moveOperationController.HorizontalMoveAction(_horizontalInputHandler);
-
                 characterAnimationController.MoveAnimation(_horizontalInputHandler);
-                
+
+                if (_rigidbody2D.velocity.x == 0 && _horizontalInputHandler !> 0.5F || _horizontalInputHandler !> -0.5F) return;
+                _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
             }
         }
 
@@ -127,15 +152,45 @@ namespace MyLittleMario.Controllers
             }
         }
 
+        void WallJump()
+        {
+            
+            if (_jumpInputHandler && !onGroundChecker.IsOnGround && onWallDetector.OnWall && !climbingOperationController.IsClimbing)
+            {
+                
+                _canWallJump = true;
+                
+            }
+        }
+
+        void SlideWall()
+        {
+            if (!onGroundChecker.IsOnGround && onWallDetector.OnWall)
+            {
+                
+                characterAnimationController.SlideWallAnimation(onWallDetector.OnWall, onGroundChecker.IsOnGround);
+               
+            }
+            else
+            {
+
+                characterAnimationController.SlideWallAnimation(onWallDetector.OnWall, onGroundChecker.IsOnGround);
+
+            }
+
+        }
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            HealthConrtoller _playerHealth = collision.ObjectHasHealth();
+             Health _health = collision.ObjectHasHealth();
 
-            if (_playerHealth != null && collision.WasHitTopSide())
+            if (_health != null && collision.WasHitTopSide())
             {
-                _playerHealth.TakeHit(damage);
+                _health.TakeHit(damage);
                 jumpOperationController.JumpAction();
             }
+
+            
         }
 
 
