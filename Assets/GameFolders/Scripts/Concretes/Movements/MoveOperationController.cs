@@ -16,6 +16,11 @@ namespace MyLittleMario.Movements
             transform.Translate(Vector2.right * horizontalInput * _moveSpeed * Time.deltaTime);
         }
 
+        public void VerticalMoveAction()
+        {
+            transform.Translate(Vector2.up * (_moveSpeed / 2) * Time.deltaTime);
+        }
+
 
     }
 

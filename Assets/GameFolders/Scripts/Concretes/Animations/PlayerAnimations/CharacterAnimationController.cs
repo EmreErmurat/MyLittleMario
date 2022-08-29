@@ -60,6 +60,22 @@ namespace MyLittleMario.Animations
             if (_animator.GetBool("slide") == (onWall && !onGround)) return;
             _animator.SetBool("slide", (onWall && !onGround));
         }
+
+
+        public void FrogIdle(bool frogIdle)
+        {
+            if (_animator.GetBool("frogIdle") == frogIdle) return;
+            _animator.SetBool("frogIdle", frogIdle);
+        }
+
+        public void FlyAnimation(float horizontalInput)
+        {
+            float _mathfValue = Mathf.Abs(horizontalInput);
+
+            if (_animator.GetFloat("flySpeed") == _mathfValue) return;
+            _animator.SetFloat("flySpeed", _mathfValue);
+        }
+
     }
 
 }

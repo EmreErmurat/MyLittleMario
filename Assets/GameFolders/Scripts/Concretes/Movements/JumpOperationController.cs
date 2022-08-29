@@ -12,6 +12,8 @@ namespace MyLittleMario.Movements
 
         float jumpforce = 400f;
         float horizontalForce = 100f;
+        float frogJumpForce = 300;
+        float frogHorizontalForce = 200;
 
        
 
@@ -35,6 +37,15 @@ namespace MyLittleMario.Movements
             _rigidbody2D.AddForce(Vector2.up * jumpforce);
             
             
+
+        }
+
+
+        public void FrogJump(float direction)
+        {
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Vector2.right * direction * frogHorizontalForce);
+            _rigidbody2D.AddForce(Vector2.up * frogJumpForce);
 
         }
 
