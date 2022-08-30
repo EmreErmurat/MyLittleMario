@@ -8,11 +8,17 @@ using UnityEngine;
 using MyLittleMario.Uis;
 using MyLittleMario.ExtensionMethods;
 using MyLittleMario.Abstracts.Combats;
+using MyLittleMario.Chest;
+
 
 namespace MyLittleMario.Controllers
 {
     public class PlayerController : MonoBehaviour
     {
+
+        
+
+
         PcInputsReceiver pcInputsReceiver;
         MoveOperationController moveOperationController;
         JumpOperationController jumpOperationController;
@@ -25,6 +31,7 @@ namespace MyLittleMario.Controllers
         DisplayHealthAndScore displayHealthAndScore;
         Damage damage;
         OnWallDetector onWallDetector;
+        ChestController nearChestController;
 
         Rigidbody2D _rigidbody2D;
         Transform _transform;
@@ -32,6 +39,7 @@ namespace MyLittleMario.Controllers
         float _horizontalInputHandler;
         float _verticalInputHandler;
         bool _jumpInputHandler;
+        bool _eKeyInputHandler;
         bool _canJump;
         bool _canWallJump;
 
@@ -85,6 +93,7 @@ namespace MyLittleMario.Controllers
             _horizontalInputHandler = pcInputsReceiver.HorizontalInput;
             _verticalInputHandler = pcInputsReceiver.VerticalInput;
             _jumpInputHandler = pcInputsReceiver.JumpInput;
+            _eKeyInputHandler = pcInputsReceiver.EInput;
 
             if (playerHealthController.IsDead || !playerHealthController.CanMove) return;
 
@@ -97,6 +106,13 @@ namespace MyLittleMario.Controllers
 
             characterAnimationController.JumpAnimation(onGroundChecker.IsOnGround);
             characterAnimationController.ClimbingAnimation(climbingOperationController.IsClimbing, _verticalInputHandler);
+
+            // Chest
+
+            if (_eKeyInputHandler && nearChestController != null)
+            {
+                nearChestController.OpenChestAction();
+            }
         }
 
         private void FixedUpdate()
@@ -126,7 +142,7 @@ namespace MyLittleMario.Controllers
 
                 _canWallJump = false;
             }
-            
+
 
 
         }
@@ -182,7 +198,8 @@ namespace MyLittleMario.Controllers
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-             Health _health = collision.ObjectHasHealth();
+            Health _health = collision.ObjectHasHealth();
+            
 
             if (_health != null && collision.WasHitTopSide())
             {
@@ -190,9 +207,16 @@ namespace MyLittleMario.Controllers
                 jumpOperationController.JumpAction();
             }
 
-            
+
+
+
         }
 
+        
+        public void NearChestDefiner(ChestController chestController = null)
+        {
+            nearChestController = chestController;
+        }
 
     }
 }

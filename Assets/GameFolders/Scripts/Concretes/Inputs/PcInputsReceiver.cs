@@ -11,6 +11,8 @@ namespace MyLittleMario.Inputs
         public bool JumpInput => Input.GetButtonDown("Jump");
 
         public bool EscInput => Input.GetKeyDown(KeyCode.Escape);
+
+        public bool EInput => Input.GetKeyDown(KeyCode.E);
     }
 }
 

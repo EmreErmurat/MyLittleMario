@@ -44,7 +44,7 @@ namespace MyLittleMario.Controllers
                 }
 
                // if (PlayerDetect == false) return;
-                //PlayerDetect = true;
+                PlayerDetect = true;
             }
         }
 
