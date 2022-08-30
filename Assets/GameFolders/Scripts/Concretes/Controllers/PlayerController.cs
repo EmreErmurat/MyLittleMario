@@ -72,8 +72,8 @@ namespace MyLittleMario.Controllers
             if (gameMenuCanvasController != null)
             {
                 playerHealthController.onDead += gameMenuCanvasController.GameOverPanelOpen;
-                playerHealthController.healthDisplayPrinter += displayHealthAndScore.HealthValuePrint;
-               
+                //playerHealthController.healthDisplayPrinter += displayHealthAndScore.HealthValuePrint;
+                playerHealthController.healthDisplayPrinter += displayHealthAndScore.DisplayHealthValue;
             }
             
         }
@@ -83,7 +83,8 @@ namespace MyLittleMario.Controllers
             if (gameMenuCanvasController != null)
             {
                 playerHealthController.onDead -= gameMenuCanvasController.GameOverPanelOpen;
-                playerHealthController.healthDisplayPrinter -= displayHealthAndScore.HealthValuePrint;
+                //playerHealthController.healthDisplayPrinter -= displayHealthAndScore.HealthValuePrint;
+                playerHealthController.healthDisplayPrinter += displayHealthAndScore.DisplayHealthValue;
             }
 
         }

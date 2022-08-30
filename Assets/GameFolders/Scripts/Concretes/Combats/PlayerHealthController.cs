@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyLittleMario.Abstracts.Combats;
 using MyLittleMario.Animations;
+using MyLittleMario.Collectable;
 
 namespace MyLittleMario.Combats
 {
@@ -47,6 +48,15 @@ namespace MyLittleMario.Combats
                 StopPlayer(true);
                 StartCoroutine(HurtActionAsync());
 
+            }
+        }
+
+        public void HealthIncrease(HealthController healthController = null)
+        {
+            if (healthController != null)
+            {
+                currentHealth++;
+                healthDisplayPrinter?.Invoke(currentHealth);
             }
         }
 
