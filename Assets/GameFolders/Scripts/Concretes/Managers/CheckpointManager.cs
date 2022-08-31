@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyLittleMario.Controllers;
 using MyLittleMario.Combats;
-using System.Linq;
+using MyLittleMario.Checkpoint;
+
 
 namespace MyLittleMario.Managers
 {
@@ -33,7 +34,16 @@ namespace MyLittleMario.Managers
 
         void HandlerHealthChanged()
         {
-            playerHealthController.transform.position = checkpointControllersList.LastOrDefault(x => x.IsPassed).transform.position;
+            Transform _newTransform = FindCheckpointTransform();
+
+            if (_newTransform != null)
+            {
+                playerHealthController.transform.position = _newTransform.position;
+            }
+            else
+            {
+                playerHealthController.transform.position = playerHealthController.transform.position;
+            }
         }
 
         public void ClearCheckpointAction()
@@ -41,5 +51,18 @@ namespace MyLittleMario.Managers
             ClearCheckpointHandler?.Invoke();
         }
        
+        private Transform FindCheckpointTransform()
+        {
+            foreach (var checkpoint in checkpointControllersList)
+            {
+                if (checkpoint.IsPassed)
+                {
+                    return checkpoint.SpawnTransfom;
+                    
+                }
+                
+            }
+            return null;
+        }
     }
 }

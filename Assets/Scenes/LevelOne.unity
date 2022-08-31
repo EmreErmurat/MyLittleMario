@@ -140,7 +140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7947576823567938120, guid: 79a0aab19af280e4fb4ff7d194a5f9b7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.3289907
+      value: -3.3289902
       objectReference: {fileID: 0}
     - target: {fileID: 7947576823567938120, guid: 79a0aab19af280e4fb4ff7d194a5f9b7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3884,23 +3884,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc90e3cd7bce30e49bcc745bf6b4178e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &554214664 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 519766870008702801, guid: e0dea9a87d4815141b2872507c9cba3f, type: 3}
-  m_PrefabInstance: {fileID: 3516026148297136602}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &554214665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 554214664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9440b1e9cb7853441ae357dd57cf327d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &687364976 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 19053829378843841, guid: 0dcce7cea6cc0e0438f8380ef8a638e5, type: 3}
@@ -5339,23 +5322,6 @@ MonoBehaviour:
   m_BoundingShape2D: {fileID: 1809104418}
   m_ConfineScreenEdges: 1
   m_Damping: 0
---- !u!1 &1545304776 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5761116295714684532, guid: e0dea9a87d4815141b2872507c9cba3f, type: 3}
-  m_PrefabInstance: {fileID: 3516026148297136602}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1545304778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545304776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92a52eef0b77f29449a85357e996e9c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1604409479 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 19053829378843841, guid: 0dcce7cea6cc0e0438f8380ef8a638e5, type: 3}
@@ -5999,11 +5965,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7146800440675365965, guid: 1fea14ced8c81ec46a5a2955259278cb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.136
+      value: -13.87
       objectReference: {fileID: 0}
     - target: {fileID: 7146800440675365965, guid: 1fea14ced8c81ec46a5a2955259278cb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.74
+      value: 0.97
       objectReference: {fileID: 0}
     - target: {fileID: 7146800440675365965, guid: 1fea14ced8c81ec46a5a2955259278cb, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6787,6 +6753,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[CheckpointManager]'
       objectReference: {fileID: 0}
+    - target: {fileID: 3516026148100391134, guid: e0dea9a87d4815141b2872507c9cba3f, type: 3}
+      propertyPath: m_Intensity
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 4944081582527558351, guid: e0dea9a87d4815141b2872507c9cba3f, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -6903,11 +6873,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4760174511460300700, guid: dea071a1eff3fb04a8c0447c9259f016, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.136
+      value: -13.87
       objectReference: {fileID: 0}
     - target: {fileID: 4760174511460300700, guid: dea071a1eff3fb04a8c0447c9259f016, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.74
+      value: 0.97
       objectReference: {fileID: 0}
     - target: {fileID: 4760174511460300700, guid: dea071a1eff3fb04a8c0447c9259f016, type: 3}
       propertyPath: m_LocalPosition.z
