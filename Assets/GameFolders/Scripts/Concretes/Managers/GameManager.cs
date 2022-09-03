@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using MyLittleMario.Inputs;
+using MyLittleMario.Controllers;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     float _delayLevelTime = 0.5f;
+
+
+    public GameObject PlayerObject { get; private set; }
 
     private void Awake()
     {
@@ -73,6 +77,15 @@ public class GameManager : MonoBehaviour
         score += scoreValue;
         scorePrinter?.Invoke(score);
         
+    }
+
+    public void SetPlayer(GameObject value)
+    {
+        PlayerController player = value.GetComponent<PlayerController>();
+        if (player != null)
+        {
+            PlayerObject = value;
+        }
     }
     
 }

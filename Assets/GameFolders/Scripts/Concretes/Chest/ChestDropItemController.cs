@@ -9,6 +9,7 @@ namespace MyLittleMario.Chest
         [SerializeField] GameObject[] itemPrefab;
    
         [SerializeField] Transform spawnPos;
+        [SerializeField] Transform ThrownWeaponHolder;
 
         public void ItemDropAction()
         {
@@ -19,7 +20,7 @@ namespace MyLittleMario.Chest
         {
             yield return new WaitForSeconds(0.3f);
             
-            Instantiate(FindRandomItem(), spawnPos);
+            Instantiate(FindRandomItem(), spawnPos.position, spawnPos.rotation, ThrownWeaponHolder);
             
 
 

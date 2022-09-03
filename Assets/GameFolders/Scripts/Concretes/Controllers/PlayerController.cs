@@ -16,9 +16,6 @@ namespace MyLittleMario.Controllers
     public class PlayerController : MonoBehaviour
     {
 
-        
-
-
         PcInputsReceiver pcInputsReceiver;
         MoveOperationController moveOperationController;
         JumpOperationController jumpOperationController;
@@ -32,19 +29,32 @@ namespace MyLittleMario.Controllers
         Damage damage;
         OnWallDetector onWallDetector;
         ChestController nearChestController;
+        ThrowWeaponController throwWeaponController;
 
         Rigidbody2D _rigidbody2D;
         Transform _transform;
 
+        [SerializeField] GameObject SpearHolder;
+        [SerializeField] GameObject AxeHolder;
+
+        //Input
         float _horizontalInputHandler;
         float _verticalInputHandler;
         bool _jumpInputHandler;
         bool _eKeyInputHandler;
+        bool _mouseZeroDownHandler;
+
+        //Action
         bool _canJump;
         bool _canWallJump;
+        bool _canThrowWeapon;
 
+        //Throw Weapon
+        bool doesHaveSpear = true;
+        bool doesHaveAxe = false;
 
-       
+        public float PlayerDirection { get;private set; }
+
 
         private void Awake()
         {
@@ -61,6 +71,7 @@ namespace MyLittleMario.Controllers
             onWallDetector = GetComponent<OnWallDetector>();
             _rigidbody2D = GetComponent<Rigidbody2D>();
             _transform = GetComponent<Transform>();
+            throwWeaponController = GetComponent<ThrowWeaponController>();
 
             if (gameMenuCanvasController != null)
             {
@@ -75,6 +86,8 @@ namespace MyLittleMario.Controllers
                 //playerHealthController.healthDisplayPrinter += displayHealthAndScore.HealthValuePrint;
                 playerHealthController.healthDisplayPrinter += displayHealthAndScore.DisplayHealthValue;
             }
+
+            GameManager.Instance.SetPlayer(this.gameObject);
             
         }
 
@@ -90,11 +103,14 @@ namespace MyLittleMario.Controllers
         }
         private void Update()
         {
+            
+
             //InputHandler
             _horizontalInputHandler = pcInputsReceiver.HorizontalInput;
             _verticalInputHandler = pcInputsReceiver.VerticalInput;
             _jumpInputHandler = pcInputsReceiver.JumpInput;
             _eKeyInputHandler = pcInputsReceiver.EInput;
+            _mouseZeroDownHandler = pcInputsReceiver.MouseZeroInput;
 
             if (playerHealthController.IsDead || !playerHealthController.CanMove) return;
 
@@ -114,10 +130,21 @@ namespace MyLittleMario.Controllers
             {
                 nearChestController.OpenChestAction();
             }
+
+            //throwWeapon
+
+            if (_mouseZeroDownHandler && (doesHaveSpear || doesHaveAxe))
+            {
+                _canThrowWeapon = true;
+            }
+
+            
         }
 
         private void FixedUpdate()
         {
+            PlayerDirection = _transform.localScale.x;
+            
             PlayerMove();
             
             climbingOperationController.ClimbAction(_verticalInputHandler);
@@ -144,6 +171,10 @@ namespace MyLittleMario.Controllers
                 _canWallJump = false;
             }
 
+            if (_canThrowWeapon)
+            {
+                ThrowWeaponAction();
+            }
 
 
         }
@@ -208,17 +239,83 @@ namespace MyLittleMario.Controllers
                 jumpOperationController.JumpAction();
             }
 
+            if (collision.collider.GetComponent<SpearController>() != null)
+            {
+                if (doesHaveSpear || doesHaveAxe)
+                {
+                    throwWeaponController.DropWeapon(DropWeaponFinder());
+                }
 
+                doesHaveSpear = true;
+                Destroy(collision.gameObject);
+            }
 
+            if (collision.collider.GetComponent<AxeController>() != null)
+            {
+                if (doesHaveAxe || doesHaveSpear )
+                {
+                    throwWeaponController.DropWeapon(DropWeaponFinder());
+                }
+
+                doesHaveAxe = true;
+                Destroy(collision.gameObject);
+            }
+
+            WeaponHolderContoller();
 
         }
 
+
+        string DropWeaponFinder()
+        {
+
+            if (doesHaveSpear)
+            {
+                doesHaveSpear = false;
+                return "spear";
+            }
+            else if (doesHaveAxe)
+            {
+                doesHaveAxe = false;
+                return "axe";
+            }
+            return null;
+        }
         
         public void NearChestDefiner(ChestController chestController = null)
         {
             nearChestController = chestController;
         }
 
+
+
+        void ThrowWeaponAction()
+        {
+            // ThrowWeapon
+
+            if (doesHaveSpear)
+            {
+                throwWeaponController.ThrowWeaponAction("spear");
+                _canThrowWeapon = false;
+                doesHaveSpear = false;
+            }
+
+            if (doesHaveAxe)
+            {
+                throwWeaponController.ThrowWeaponAction("axe");
+                _canThrowWeapon = false;
+                doesHaveAxe = false;
+            }
+
+            WeaponHolderContoller();
+        }
+
+        void WeaponHolderContoller()
+        {
+            SpearHolder.SetActive(doesHaveSpear);
+            AxeHolder.SetActive(doesHaveAxe);
+
+        }
     }
 }
 

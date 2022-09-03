@@ -13,6 +13,8 @@ namespace MyLittleMario.Inputs
         public bool EscInput => Input.GetKeyDown(KeyCode.Escape);
 
         public bool EInput => Input.GetKeyDown(KeyCode.E);
+
+        public bool MouseZeroInput => Input.GetMouseButton(0);
     }
 }
 
